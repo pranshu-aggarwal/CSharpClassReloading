@@ -1,0 +1,17 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpClassReloading", "CSharpClassReloading\CSharpClassReloading.csproj", "{357FD2E2-67F0-45A2-A8DF-0E4CE0408B79}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|anycpu = Debug|anycpu
+		Release|anycpu = Release|anycpu
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{357FD2E2-67F0-45A2-A8DF-0E4CE0408B79}.Debug|anycpu.ActiveCfg = Debug|Any CPU
+		{357FD2E2-67F0-45A2-A8DF-0E4CE0408B79}.Debug|anycpu.Build.0 = Debug|Any CPU
+		{357FD2E2-67F0-45A2-A8DF-0E4CE0408B79}.Release|anycpu.ActiveCfg = Release|Any CPU
+		{357FD2E2-67F0-45A2-A8DF-0E4CE0408B79}.Release|anycpu.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
