@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Test;
 
 namespace CSharpClassReloading
 {
@@ -9,25 +8,89 @@ namespace CSharpClassReloading
     {
         static async Task Main(string[] args)
         {
+            Console.WriteLine("1. CSharpScript");
+            Console.WriteLine("2. CSharpCompilation");
+            var loadType = int.Parse(Console.ReadLine());
             Console.WriteLine("1. Public Class");
             Console.WriteLine("2. Internal Class");
             var classType = int.Parse(Console.ReadLine());
-            string code = GetCSharpScriptCode(classType, "CSharpClassReloading.dll");
-
+            Type type;
             try
             {
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
-                var type = await CSharpScriptLoader.Load(code, "NewClass");
+                switch (loadType)
+                {
+                    case (1):
+                        string code = GetCSharpScriptCode(classType, "CSharpClassReloading.dll");
+                        type = await CSharpScriptLoader.Load(code, "NewClass");
+                        break;
+                    default:
+                        code = GetCSharpCompilationCode(classType);
+                        type = await CSharpCompilationLoader.Load(code, "CSharpClassReloading.NewClass");
+                        break;
+                }
                 var executeMethod = type.GetMethod("Execute");
                 executeMethod.Invoke(null, null);
                 Console.WriteLine("Total Executed Time: " + sw.ElapsedMilliseconds);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Console.WriteLine(ex);
             }
+        }
 
+        private static string GetCSharpCompilationCode(int classType)
+        {
+            if (classType == 1)
+                return GetCSharpCompilationCodePublic();
+
+            return GetCSharpCompilationCodeInternal();
+        }
+
+        private static string GetCSharpCompilationCodePublic()
+        {
+            return @"namespace CSharpClassReloading
+{
+    public static class NewClass
+    {
+	    public static void Execute()
+	    {"
+    + "CSharpClassReloading.PublicClass.Call(\"CSharpScriptLoader\");" +
+        @"}
+        }
+}
+";
+        }
+
+        private static string GetCSharpCompilationCodeInternal()
+        {
+            return "[assembly: System.Runtime.CompilerServices.IgnoresAccessChecksTo(\"CSharpClassReloading\")]" + @"
+namespace CSharpClassReloading
+{
+    public static class NewClass
+    {
+	    public static void Execute()
+	    {"
+    + "CSharpClassReloading.InternalClass.Call(\"CSharpScriptLoader\");" +
+        @"}
+        }
+}
+
+namespace System.Runtime.CompilerServices
+{
+    [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
+    public class IgnoresAccessChecksToAttribute : Attribute
+    {
+        public IgnoresAccessChecksToAttribute(string assemblyName)
+        {
+            AssemblyName = assemblyName;
+        }
+
+        public string AssemblyName { get; }
+    }
+}
+";
         }
 
         private static string GetCSharpScriptCode(int classType, string assemblyName)
