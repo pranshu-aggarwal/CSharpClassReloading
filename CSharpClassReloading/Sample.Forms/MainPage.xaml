@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Sample.Forms.MainPage"
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d">
+    <StackLayout Margin="20"
+                 HorizontalOptions="Start"
+                 Orientation="Vertical"
+                 VerticalOptions="Center">
+        <Label FontAttributes="Bold"
+               Text="Choose Compilation Method" />
+        <StackLayout Margin="0,5,0,0"
+                     Orientation="Horizontal">
+            <CheckBox x:Name="CSharpScript"
+                      CheckedChanged="CSharpScript_CheckedChanged" />
+            <Label Margin="10,0"
+                   Text="CSharpScript" />
+        </StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <CheckBox x:Name="CSharpCompilation"
+                      CheckedChanged="CSharpCompilation_CheckedChanged" />
+            <Label Margin="10,0"
+                   Text="CSharpCompilation" />
+        </StackLayout>
+
+        <Label Margin="0,10,0,0"
+               FontAttributes="Bold"
+               Text="Choose Public/Internal" />
+        <StackLayout Margin="0,5,0,0"
+                     Orientation="Horizontal">
+            <CheckBox x:Name="Public"
+                      CheckedChanged="Public_CheckedChanged" />
+            <Label Margin="10,0"
+                   Text="Public" />
+        </StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <CheckBox x:Name="Internal"
+                      CheckedChanged="Internal_CheckedChanged" />
+            <Label Margin="10,0"
+                   Text="Internal" />
+        </StackLayout>
+
+        <Button Margin="0,5,0,0"
+                Clicked="Compile_Clicked"
+                Text="Compile" />
+        <Label Margin="0,10,0,0"
+               FontAttributes="Bold"
+               Text="Result:" />
+        <Label x:Name="Result" />
+    </StackLayout>
+</ContentPage>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Reloading.Core;
 
 namespace CSharpClassReloading
 {
@@ -22,11 +23,11 @@ namespace CSharpClassReloading
                 switch (loadType)
                 {
                     case (1):
-                        string code = GetCSharpScriptCode(classType, "CSharpClassReloading.dll");
+                        string code = CodeGenerator.GetCSharpScriptCode(classType == 1, "CSharpClassReloading.dll");
                         type = await CSharpScriptLoader.Load(code, "NewClass");
                         break;
                     default:
-                        code = GetCSharpCompilationCode(classType);
+                        code = CodeGenerator.GetCSharpCompilationCode(classType == 1);
                         type = await CSharpCompilationLoader.Load(code, "CSharpClassReloading.NewClass");
                         break;
                 }
@@ -40,83 +41,8 @@ namespace CSharpClassReloading
             }
         }
 
-        private static string GetCSharpCompilationCode(int classType)
-        {
-            if (classType == 1)
-                return GetCSharpCompilationCodePublic();
+        
 
-            return GetCSharpCompilationCodeInternal();
-        }
-
-        private static string GetCSharpCompilationCodePublic()
-        {
-            return @"namespace CSharpClassReloading
-{
-    public static class NewClass
-    {
-	    public static void Execute()
-	    {"
-    + "CSharpClassReloading.PublicClass.Call(\"CSharpScriptLoader\");" +
-        @"}
-        }
-}
-";
-        }
-
-        private static string GetCSharpCompilationCodeInternal()
-        {
-            return "[assembly: System.Runtime.CompilerServices.IgnoresAccessChecksTo(\"CSharpClassReloading\")]" + @"
-namespace CSharpClassReloading
-{
-    public static class NewClass
-    {
-	    public static void Execute()
-	    {"
-    + "CSharpClassReloading.InternalClass.Call(\"CSharpScriptLoader\");" +
-        @"}
-        }
-}
-
-namespace System.Runtime.CompilerServices
-{
-    [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-    public class IgnoresAccessChecksToAttribute : Attribute
-    {
-        public IgnoresAccessChecksToAttribute(string assemblyName)
-        {
-            AssemblyName = assemblyName;
-        }
-
-        public string AssemblyName { get; }
-    }
-}
-";
-        }
-
-        private static string GetCSharpScriptCode(int classType, string assemblyName)
-        {
-            string methodCall = "";
-            if(classType == 1)
-            {
-                methodCall = "CSharpClassReloading.PublicClass.Call(\"CSharpScriptLoader\");";
-            }
-            else
-            {
-                methodCall = $"var assembly = System.Reflection.Assembly.LoadFrom(\"{assemblyName}\");";
-                methodCall += "var type = assembly.GetType(\"CSharpClassReloading.InternalClass\");";
-                methodCall += "var mi = type.GetMethod(\"Call\", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);";
-                methodCall += "mi.Invoke(null, new[] {\"CSharpScriptLoader\"});";
-            }
-            return @"public static class NewClass
-{
-	public static void Execute()
-	{"
-+ methodCall +
-		
-
-    @"}
-    }
-";
-        }
+        
     }
 }

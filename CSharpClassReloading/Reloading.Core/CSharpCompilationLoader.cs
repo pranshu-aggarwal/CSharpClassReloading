@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace CSharpClassReloading
+namespace Reloading.Core
 {
     public class CSharpCompilationLoader
     {
